@@ -47,178 +47,185 @@ export default function ExcelExportPanel() {
     };
 
     return (
-        <div className="W-[50%] min-h-screen bg-slate-50 p-6 md:p-10 pl-72 space-y-8">
-            <div >
-                <h1 className="text-2xl font-bold text-slate-800">Financial & Student Reports Export</h1>
-                <p className="text-xs text-slate-500 mt-1">
-                    Generate structured Excel spreadsheets across four dedicated report modules.
-                </p>
-            </div>
+        <div className="w-full min-h-screen bg-slate-50 p-4 sm:p-6 md:p-10">
+            <div className="max-w-7xl mx-auto space-y-6">
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6">
+                {/* Header Card */}
+                <div className="bg-white p-5 sm:p-8 rounded-2xl border border-slate-200/80 shadow-sm">
+                    <h2 className="text-lg sm:text-xl font-bold text-slate-800 tracking-tight">
+                        Financial & Student Reports Export
+                    </h2>
+                    <p className="text-xs sm:text-sm text-slate-500 mt-1">
+                        Generate structured Excel spreadsheets across four dedicated report modules.
+                    </p>
+                </div>
 
-                {/* 1. SECTION: Export by Grade */}
-                <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 flex flex-col justify-between space-y-5">
-                    <div className="space-y-2">
-                        <div className="w-9 h-9 rounded-xl bg-red-50 text-red-600 flex items-center justify-center text-lg font-bold">📊</div>
-                        <h3 className="text-sm font-bold text-slate-800">1. Export by Grade</h3>
-                        <p className="text-[11px] text-slate-500">Roll, student name, father name, email, phone, fees & joining date.</p>
-                    </div>
+                {/* Export Cards Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
 
-                    <div className="space-y-3">
-                        <div>
-                            <label className="block text-[10px] font-bold uppercase text-slate-500 mb-1">Select Grade</label>
-                            <select
-                                value={grade1}
-                                onChange={(e) => setGrade1(e.target.value)}
-                                className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:outline-none focus:border-red-600"
+                    {/* 1. SECTION: Export by Grade */}
+                    <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 flex flex-col justify-between space-y-5">
+                        <div className="space-y-2">
+                            <div className="w-9 h-9 rounded-xl bg-red-50 text-red-600 flex items-center justify-center text-lg font-bold">📊</div>
+                            <h3 className="text-sm font-bold text-slate-800">1. Export by Grade</h3>
+                            <p className="text-[11px] text-slate-500">Roll, student name, father name, email, phone, fees & joining date.</p>
+                        </div>
+
+                        <div className="space-y-3">
+                            <div>
+                                <label className="block text-[10px] font-bold uppercase text-slate-500 mb-1">Select Grade</label>
+                                <select
+                                    value={grade1}
+                                    onChange={(e) => setGrade1(e.target.value)}
+                                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 bg-slate-50/50 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-600 transition"
+                                >
+                                    {gradesList.map((g) => <option key={g} value={g}>{g}</option>)}
+                                </select>
+                            </div>
+                            <button
+                                onClick={() => handleDownload('grade', { grade: grade1 }, 'Grade')}
+                                disabled={loadingSection === 'Grade'}
+                                className="w-full py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold shadow-md shadow-red-500/20 transition active:scale-[0.98] disabled:opacity-60"
                             >
-                                {gradesList.map((g) => <option key={g} value={g}>{g}</option>)}
-                            </select>
+                                {loadingSection === 'Grade' ? 'Generating...' : 'Export Grade (.xlsx)'}
+                            </button>
                         </div>
-                        <button
-                            onClick={() => handleDownload('grade', { grade: grade1 }, 'Grade')}
-                            disabled={loadingSection === 'Grade'}
-                            className="w-full py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition disabled:opacity-60"
-                        >
-                            {loadingSection === 'Grade' ? 'Generating...' : 'Export Grade (.xlsx)'}
-                        </button>
-                    </div>
-                </div>
-
-                {/* 2. SECTION: Export Monthly Fees */}
-                <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 flex flex-col justify-between space-y-5">
-                    <div className="space-y-2">
-                        <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg font-bold">📅</div>
-                        <h3 className="text-sm font-bold text-slate-800">2. Export Monthly Fees</h3>
-                        <p className="text-[11px] text-slate-500">Monthly fees, paid vs due status & collected amounts.</p>
                     </div>
 
-                    <div className="space-y-3">
-                        <div>
-                            <label className="block text-[10px] font-bold uppercase text-slate-500 mb-1">Select Month</label>
-                            <input
-                                type="month"
-                                value={month}
-                                onChange={(e) => setMonth(e.target.value)}
-                                className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:outline-none focus:border-amber-600"
-                            />
+                    {/* 2. SECTION: Export Monthly Fees */}
+                    <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 flex flex-col justify-between space-y-5">
+                        <div className="space-y-2">
+                            <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg font-bold">📅</div>
+                            <h3 className="text-sm font-bold text-slate-800">2. Export Monthly Fees</h3>
+                            <p className="text-[11px] text-slate-500">Monthly fees, paid vs due status & collected amounts.</p>
                         </div>
-                        <button
-                            onClick={() => handleDownload('month', { month }, 'Month')}
-                            disabled={loadingSection === 'Month'}
-                            className="w-full py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition disabled:opacity-60"
-                        >
-                            {loadingSection === 'Month' ? 'Generating...' : 'Export Monthly (.xlsx)'}
-                        </button>
-                    </div>
-                </div>
 
-                {/* 3. SECTION: Custom Date Range (+ Grade Filter) */}
-                <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 flex flex-col justify-between space-y-5">
-                    <div className="space-y-2">
-                        <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg font-bold">📆</div>
-                        <h3 className="text-sm font-bold text-slate-800">3. Custom Date Range</h3>
-                        <p className="text-[11px] text-slate-500">Fee report by payment date with optional Grade filter.</p>
-                    </div>
-
-                    <div className="space-y-3">
-                        <div>
-                            <label className="block text-[10px] font-bold uppercase text-slate-500 mb-1">Grade Filter</label>
-                            <select
-                                value={dateGrade}
-                                onChange={(e) => setDateGrade(e.target.value)}
-                                className="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50/50 focus:outline-none focus:border-emerald-600"
+                        <div className="space-y-3">
+                            <div>
+                                <label className="block text-[10px] font-bold uppercase text-slate-500 mb-1">Select Month</label>
+                                <input
+                                    type="month"
+                                    value={month}
+                                    onChange={(e) => setMonth(e.target.value)}
+                                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 bg-slate-50/50 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-600 transition"
+                                />
+                            </div>
+                            <button
+                                onClick={() => handleDownload('month', { month }, 'Month')}
+                                disabled={loadingSection === 'Month'}
+                                className="w-full py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold shadow-md shadow-amber-500/20 transition active:scale-[0.98] disabled:opacity-60"
                             >
-                                <option value="ALL">All Grades</option>
-                                {gradesList.map((g) => <option key={g} value={g}>{g}</option>)}
-                            </select>
+                                {loadingSection === 'Month' ? 'Generating...' : 'Export Monthly (.xlsx)'}
+                            </button>
                         </div>
-                        <div className="grid grid-cols-2 gap-2">
-                            <div>
-                                <label className="block text-[10px] font-bold uppercase text-slate-500 mb-0.5">From</label>
-                                <input
-                                    type="date"
-                                    value={startDate3}
-                                    onChange={(e) => setStartDate3(e.target.value)}
-                                    className="w-full px-2 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50/50 focus:border-emerald-600"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-[10px] font-bold uppercase text-slate-500 mb-0.5">To</label>
-                                <input
-                                    type="date"
-                                    value={endDate3}
-                                    onChange={(e) => setEndDate3(e.target.value)}
-                                    className="w-full px-2 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50/50 focus:border-emerald-600"
-                                />
-                            </div>
-                        </div>
-                        <button
-                            onClick={() => {
-                                if (!startDate3 || !endDate3) return alert('Select start & end dates');
-                                handleDownload('date-range', { startDate: startDate3, endDate: endDate3, grade: dateGrade }, 'DateRange');
-                            }}
-                            disabled={loadingSection === 'DateRange'}
-                            className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition disabled:opacity-60"
-                        >
-                            {loadingSection === 'DateRange' ? 'Generating...' : 'Export Date Range (.xlsx)'}
-                        </button>
-                    </div>
-                </div>
-
-                {/* 4. SECTION: Export by Grade & Joining Date */}
-                <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 flex flex-col justify-between space-y-5">
-                    <div className="space-y-2">
-                        <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg font-bold">📋</div>
-                        <h3 className="text-sm font-bold text-slate-800">4. Grade & Joining Date</h3>
-                        <p className="text-[11px] text-slate-500">Student roster filtered by Grade and joining date range.</p>
                     </div>
 
-                    <div className="space-y-3">
-                        <div>
-                            <label className="block text-[10px] font-bold uppercase text-slate-500 mb-1">Select Grade</label>
-                            <select
-                                value={grade4}
-                                onChange={(e) => setGrade4(e.target.value)}
-                                className="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50/50 focus:outline-none focus:border-blue-600"
+                    {/* 3. SECTION: Custom Date Range (+ Grade Filter) */}
+                    <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 flex flex-col justify-between space-y-5">
+                        <div className="space-y-2">
+                            <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg font-bold">📆</div>
+                            <h3 className="text-sm font-bold text-slate-800">3. Custom Date Range</h3>
+                            <p className="text-[11px] text-slate-500">Fee report by payment date with optional Grade filter.</p>
+                        </div>
+
+                        <div className="space-y-3">
+                            <div>
+                                <label className="block text-[10px] font-bold uppercase text-slate-500 mb-1">Grade Filter</label>
+                                <select
+                                    value={dateGrade}
+                                    onChange={(e) => setDateGrade(e.target.value)}
+                                    className="w-full px-2.5 py-1.5 text-xs rounded-xl border border-slate-200 bg-slate-50/50 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition"
+                                >
+                                    <option value="ALL">All Grades</option>
+                                    {gradesList.map((g) => <option key={g} value={g}>{g}</option>)}
+                                </select>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label className="block text-[10px] font-bold uppercase text-slate-500 mb-0.5">From</label>
+                                    <input
+                                        type="date"
+                                        value={startDate3}
+                                        onChange={(e) => setStartDate3(e.target.value)}
+                                        className="w-full px-2 py-1.5 text-xs rounded-xl border border-slate-200 bg-slate-50/50 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-[10px] font-bold uppercase text-slate-500 mb-0.5">To</label>
+                                    <input
+                                        type="date"
+                                        value={endDate3}
+                                        onChange={(e) => setEndDate3(e.target.value)}
+                                        className="w-full px-2 py-1.5 text-xs rounded-xl border border-slate-200 bg-slate-50/50 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition"
+                                    />
+                                </div>
+                            </div>
+                            <button
+                                onClick={() => {
+                                    if (!startDate3 || !endDate3) return alert('Select start & end dates');
+                                    handleDownload('date-range', { startDate: startDate3, endDate: endDate3, grade: dateGrade }, 'DateRange');
+                                }}
+                                disabled={loadingSection === 'DateRange'}
+                                className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md shadow-emerald-500/20 transition active:scale-[0.98] disabled:opacity-60"
                             >
-                                {gradesList.map((g) => <option key={g} value={g}>{g}</option>)}
-                            </select>
+                                {loadingSection === 'DateRange' ? 'Generating...' : 'Export Date Range (.xlsx)'}
+                            </button>
                         </div>
-                        <div className="grid grid-cols-2 gap-2">
-                            <div>
-                                <label className="block text-[10px] font-bold uppercase text-slate-500 mb-0.5">From</label>
-                                <input
-                                    type="date"
-                                    value={startDate4}
-                                    onChange={(e) => setStartDate4(e.target.value)}
-                                    className="w-full px-2 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50/50 focus:border-blue-600"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-[10px] font-bold uppercase text-slate-500 mb-0.5">To</label>
-                                <input
-                                    type="date"
-                                    value={endDate4}
-                                    onChange={(e) => setEndDate4(e.target.value)}
-                                    className="w-full px-2 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50/50 focus:border-blue-600"
-                                />
-                            </div>
-                        </div>
-                        <button
-                            onClick={() => {
-                                if (!startDate4 || !endDate4) return alert('Select start & end dates');
-                                handleDownload('grade-date', { grade: grade4, startDate: startDate4, endDate: endDate4 }, 'GradeDate');
-                            }}
-                            disabled={loadingSection === 'GradeDate'}
-                            className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition disabled:opacity-60"
-                        >
-                            {loadingSection === 'GradeDate' ? 'Generating...' : 'Export Grade & Date (.xlsx)'}
-                        </button>
                     </div>
-                </div>
 
+                    {/* 4. SECTION: Export by Grade & Joining Date */}
+                    <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 flex flex-col justify-between space-y-5">
+                        <div className="space-y-2">
+                            <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg font-bold">📋</div>
+                            <h3 className="text-sm font-bold text-slate-800">4. Grade & Joining Date</h3>
+                            <p className="text-[11px] text-slate-500">Student roster filtered by Grade and joining date range.</p>
+                        </div>
+
+                        <div className="space-y-3">
+                            <div>
+                                <label className="block text-[10px] font-bold uppercase text-slate-500 mb-1">Select Grade</label>
+                                <select
+                                    value={grade4}
+                                    onChange={(e) => setGrade4(e.target.value)}
+                                    className="w-full px-2.5 py-1.5 text-xs rounded-xl border border-slate-200 bg-slate-50/50 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition"
+                                >
+                                    {gradesList.map((g) => <option key={g} value={g}>{g}</option>)}
+                                </select>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label className="block text-[10px] font-bold uppercase text-slate-500 mb-0.5">From</label>
+                                    <input
+                                        type="date"
+                                        value={startDate4}
+                                        onChange={(e) => setStartDate4(e.target.value)}
+                                        className="w-full px-2 py-1.5 text-xs rounded-xl border border-slate-200 bg-slate-50/50 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-[10px] font-bold uppercase text-slate-500 mb-0.5">To</label>
+                                    <input
+                                        type="date"
+                                        value={endDate4}
+                                        onChange={(e) => setEndDate4(e.target.value)}
+                                        className="w-full px-2 py-1.5 text-xs rounded-xl border border-slate-200 bg-slate-50/50 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition"
+                                    />
+                                </div>
+                            </div>
+                            <button
+                                onClick={() => {
+                                    if (!startDate4 || !endDate4) return alert('Select start & end dates');
+                                    handleDownload('grade-date', { grade: grade4, startDate: startDate4, endDate: endDate4 }, 'GradeDate');
+                                }}
+                                disabled={loadingSection === 'GradeDate'}
+                                className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md shadow-blue-500/20 transition active:scale-[0.98] disabled:opacity-60"
+                            >
+                                {loadingSection === 'GradeDate' ? 'Generating...' : 'Export Grade & Date (.xlsx)'}
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     );

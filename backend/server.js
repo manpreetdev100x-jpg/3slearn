@@ -13,7 +13,7 @@ const excelroute = require("../backend/routes/excel");
 
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: ["http://localhost:5173","https://3slearn.vercel.app/"],
     credentials: true,
   })
 );
